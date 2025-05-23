@@ -12,6 +12,13 @@ namespace Ex03.GarageLogic
         private float m_MaxAmount;
         private float m_EnergyPrecentageRemaining;
 
+        public EnergySource(float i_EnergyPrecentageRemaining, float i_CurrentAmount, float i_MaxAmount)
+        {
+            m_EnergyPrecentageRemaining = i_EnergyPrecentageRemaining;
+            m_CurrentAmount = i_CurrentAmount; 
+            m_MaxAmount = i_MaxAmount;
+        }
+
         public abstract void FillEnergySource(float i_AmountOfEnergyToFill);
 
     }

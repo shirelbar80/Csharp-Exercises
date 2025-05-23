@@ -3,7 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using static Ex03.GarageLogic.Fuel;
 
 namespace Ex03.ConsoleUI
 {
@@ -68,21 +70,48 @@ namespace Ex03.ConsoleUI
         public void AddVehicle()
         {
             Console.Write("Enter license number: ");
-            string vehicleLicenseNumber = Console.ReadLine();
+            string licenseNumber = Console.ReadLine();
 
-            m_GarageManager.isVehicleInTheGarage(vehicleLicenseNumber); 
+            m_GarageManager.isVehicleInTheGarage(licenseNumber);
             //will throw an excemption or will continue to add the vehicle
 
             Console.WriteLine("What type of vehicle would you like to insert the garage?");
-            Console.WriteLine("1 - FuelCar");
-            Console.WriteLine("2 - ElectricCar");
-            Console.WriteLine("3 - FuelMotorcycle");
-            Console.WriteLine("4 - ElectricMotorcycle");
-            Console.WriteLine("5 - Truck");
             string vehicleType = Console.ReadLine();
+            //add exception
 
-            Console.WriteLine("What is the status of the car? (In Progress, Fixed, Payed)");
-            string vehicleStatus = Console.ReadLine();
+            Console.Write("Enter model name: ");
+            string modelName = Console.ReadLine();
+
+
+            Vehicle vehicle = VehicleCreator.CreateVehicle(vehicleType, licenseNumber, modelName);
+            //check if null -> exception
+
+            setWheelsFromUser(vehicle);
+
+
+            Console.WriteLine("Enter energy precentage remaining: ");
+            float precentageOfEnergyRemaining = getDetailAndTryFloatParse();
+
+            Console.WriteLine("Enter current energy amount: ");
+            float currentEnergyAmount = getDetailAndTryFloatParse();
+
+            vehicle.setEnergySource(precentageOfEnergyRemaining, currentEnergyAmount);
+
+            //need to set the unique variables of the vehicles
+            if (vehicleType.ToLower().Contains("motorcycle"))//motorcycle
+            {
+
+            }
+            else if(vehicleType.ToLower().Contains("car"))   //car
+            {
+                 
+            }
+            else//truck
+            {
+                
+            }
+
+
 
 
 
@@ -93,23 +122,86 @@ namespace Ex03.ConsoleUI
             Console.WriteLine("Vehicle added.");
         }
 
-        /*private static void ListVehicles()
+        private void setWheelsFromUser(Vehicle i_Vehicle)
         {
-            Console.WriteLine("Vehicles in garage:");
-            foreach (var license in s_GarageManager.GetAllLicenseNumbers())
+            List<Wheel> wheelsSet = new List<Wheel>();
+
+            for (int i = 0; i < i_Vehicle.NumberOfWheels; i++)
             {
-                Console.WriteLine(license);
+                Console.Write("For wheel number " + i + ":");
+                Console.Write("Enter tier model: ");
+                string tierModel = Console.ReadLine();
+
+                Console.WriteLine("Enter current air pressure: ");
+                float currentAirPressure = getDetailAndTryFloatParse();
+
+                wheelsSet.Add(new Wheel(tierModel, currentAirPressure, i_Vehicle.MaxAirPressure));
             }
+
+            i_Vehicle.Wheels = wheelsSet;
+        }
+        private void getDetailsAndSetMotorcycle()
+        {
+            Console.WriteLine("Enter license type: ");
+            string licenseType = Console.ReadLine();
+            //add exception
+
+
+
+            Console.WriteLine("Enter engine volume: ");
+            string engineVolume = Console.ReadLine();
+            if (!float.TryParse(engineVolume, out float numberOfEngineVolume))
+            {
+                //add exception - did not succeeded parse
+            }
+
+            
+
+
+
+
         }
 
-        private static void InflateWheels()
+        private void getDetailsAndSetCar()
         {
-            Console.Write("Enter license number: ");
-            string license = Console.ReadLine();
-            s_GarageManager.InflateWheelsToMax(license);
-            Console.WriteLine("Wheels inflated.");
-        }*/
+
+
+
+        }
+
+        private void getDetailsAndSetTruck()
+        {
+
+
+
+
+
+
+        }
+
+     
+
+        private float getDetailAndTryFloatParse()
+        {
+            string detailFromUser = Console.ReadLine();
+
+            if (!float.TryParse(detailFromUser, out float numberOfDetailFromUser))
+            {
+                //add exception - did not succeeded parse
+            }
+
+            return numberOfDetailFromUser;
+        }
+
+        
+
+
+
+
+
+
     }
+
 
 
 }

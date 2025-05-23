@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Ex03.GarageLogic
 {
-    public class Car : Vehicle
+    public abstract class Car : Vehicle
     {
         enum eCarColours
         {
@@ -21,11 +21,16 @@ namespace Ex03.GarageLogic
             Five = 5
         }
 
-        eCarColours m_CarColor;
-        eDoorsAmount m_DoorsAmount;
+        private const int k_NumberOfWheels = 5;
+        private const float k_DefualtMaxAirPressure = 27;
+        private eCarColours m_CarColor;
+        private eDoorsAmount m_DoorsAmount;
 
-        public Car(string i_EnergySource) : base(i_EnergySource)
+        public Car(string i_LicenseID, string i_ModelName) : base(i_LicenseID, i_ModelName, k_NumberOfWheels, k_DefualtMaxAirPressure)
         {
+            
         }
+
+        
     }
 }

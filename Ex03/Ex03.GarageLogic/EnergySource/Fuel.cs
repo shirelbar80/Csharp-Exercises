@@ -18,6 +18,13 @@ namespace Ex03.GarageLogic
 
         eFuelType m_FuelType;
 
+        public Fuel(eFuelType i_FuelType, float i_EnergyPrecentageRemaining, float i_CurrentAmount, float i_MaxAmount) : base(i_EnergyPrecentageRemaining, i_CurrentAmount, i_MaxAmount)
+        {
+            m_FuelType = i_FuelType;
+        }
+
+
+
 
         public override void FillEnergySource(float i_AmountOfEnergyToFill)
         {
