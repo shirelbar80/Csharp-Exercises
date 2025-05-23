@@ -16,9 +16,8 @@ namespace Ex03.GarageLogic
         eMotorcycleLicenseType m_LicenseType;
         int m_EngineVolume;
 
-
-
-
-
+        public Motorcycle(string i_EnergySource) : base(i_EnergySource)
+        {
+        }
     }
 }

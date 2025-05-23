@@ -8,18 +8,8 @@ namespace Ex03.GarageLogic
 {
     public class ElectricMotorcycle : Motorcycle
     {
-
-        public ElectricMotorcycle(string i_LicenseID, string i_ModelName)
+        public ElectricMotorcycle(string i_EnergySource, string i_ModelName) : base(i_EnergySource)
         {
-            
-            
-
-
-
-
         }
-
-
-
     }
 }

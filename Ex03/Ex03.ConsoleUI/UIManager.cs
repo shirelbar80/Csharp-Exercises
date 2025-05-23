@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static Ex03.GarageLogic.Fuel;
 
 namespace Ex03.ConsoleUI
 {
@@ -12,7 +11,7 @@ namespace Ex03.ConsoleUI
     {
         private GarageManager m_GarageManager = new GarageManager();
 
-        public static void Run()
+        public void Run()
         {
             bool exit = false;
             while (!exit)
@@ -33,13 +32,13 @@ namespace Ex03.ConsoleUI
                 switch (input)
                 {
                     case "1":
-                        AddVehicle();
+                        //AddVehicle();
                         break;
                     case "2":
-                        ListVehicles();
+                        AddVehicle();
                         break;
                     case "3":
-                        InflateWheels();
+                        //InflateWheels();
                         break;
                     case "4":
                         
@@ -86,7 +85,6 @@ namespace Ex03.ConsoleUI
             string vehicleStatus = Console.ReadLine();
 
 
-          
 
 
 

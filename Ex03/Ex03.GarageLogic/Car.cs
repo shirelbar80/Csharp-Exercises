@@ -24,5 +24,8 @@ namespace Ex03.GarageLogic
         eCarColours m_CarColor;
         eDoorsAmount m_DoorsAmount;
 
+        public Car(string i_EnergySource) : base(i_EnergySource)
+        {
+        }
     }
 }

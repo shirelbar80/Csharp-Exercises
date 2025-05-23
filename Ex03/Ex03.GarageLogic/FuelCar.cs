@@ -8,9 +8,8 @@ namespace Ex03.GarageLogic
 {
     public class FuelCar : Car
     {
-        public FuelCar(string i_LicenseID, string i_ModelName)
+        public FuelCar(string i_EnergySource, string i_ModelName) : base(i_EnergySource)
         {
-            
         }
     }
 }

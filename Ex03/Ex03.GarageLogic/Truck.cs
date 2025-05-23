@@ -11,10 +11,8 @@ namespace Ex03.GarageLogic
         float m_CargoVolume;
         bool m_DangeresCargo;
 
-
-        public Truck(string i_LicenseID, string i_ModelName)
+        public Truck(string i_EnergySource, string i_ModelName) : base(i_EnergySource)
         {
-            
         }
     }
 }
