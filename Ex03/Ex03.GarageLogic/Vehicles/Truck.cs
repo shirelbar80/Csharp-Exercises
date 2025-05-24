@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Ex03.GarageLogic.Car;
 
 namespace Ex03.GarageLogic
 {
@@ -26,7 +27,16 @@ namespace Ex03.GarageLogic
             EnergySource = new Fuel(k_FuelType, i_EnergyPrecentageRemaining, i_CurrentAmount, k_MaxFuelAmount);
         }
 
+        public float CargoVolume
+        {
+            get { return m_CargoVolume; }
+            set { m_CargoVolume = value; }
+        }
 
-
+        public bool DangeresCargo
+        {
+            get { return m_DangeresCargo; }
+            set { m_DangeresCargo = value; }
+        }
     }
 }

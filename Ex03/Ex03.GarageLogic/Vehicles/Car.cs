@@ -8,12 +8,12 @@ namespace Ex03.GarageLogic
 {
     public abstract class Car : Vehicle
     {
-        enum eCarColours
+        public enum eCarColours
         {
             Yellow, Black, White, Silver
         }
 
-        enum eDoorsAmount
+        public enum eDoorsAmount
         {
             Two = 2, 
             Three = 3,
@@ -30,7 +30,17 @@ namespace Ex03.GarageLogic
         {
             
         }
+        public eCarColours CarColor
+        {
+            get { return m_CarColor; }
+            set { m_CarColor = value; }
 
-        
+        }
+
+        public eDoorsAmount DoorsAmount
+        {
+            get { return m_DoorsAmount; }
+            set { m_DoorsAmount = value; }
+        }
     }
 }

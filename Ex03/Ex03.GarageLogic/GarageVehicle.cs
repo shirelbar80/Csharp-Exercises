@@ -8,7 +8,7 @@ namespace Ex03.GarageLogic
 {
     public class GarageVehicle
     {
-        enum eVehicleStatus
+        public enum eVehicleStatus
         {
             InProgress, Fixed, Payed
         }
@@ -24,9 +24,30 @@ namespace Ex03.GarageLogic
             m_Vehicle = i_Vehicle;
             m_OwnerName = i_OwnerName;
             m_OwnerPhone = i_OwnerPhone;
-
+            m_VehicleStatus = eVehicleStatus.InProgress;
         }
 
+        public Vehicle Vehicle
+        {
+            get { return m_Vehicle; }
+            set { m_Vehicle = value; }
+        }
+
+        public string OwnerName
+        {
+            get { return m_OwnerName; }
+            set { m_OwnerName = value; }
+        }
+        public string OwnerPhone
+        {
+            get { return m_OwnerPhone; }
+            set { m_OwnerPhone = value; }
+        }
+        public eVehicleStatus VehicleStatus
+        {
+            get { return m_VehicleStatus; }
+            set { m_VehicleStatus = value; }
+        }
 
     }
 }

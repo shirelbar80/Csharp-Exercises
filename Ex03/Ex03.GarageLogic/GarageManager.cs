@@ -19,5 +19,11 @@ namespace Ex03.GarageLogic
             }
         }
 
+        public void insertVehicleToGarage(GarageVehicle i_vehicle)
+        {
+            m_Vehicles.Add(i_vehicle.Vehicle.LicenseID, i_vehicle);
+        }
+
+
     }
 }
