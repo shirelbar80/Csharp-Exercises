@@ -25,7 +25,7 @@ namespace Ex03.ConsoleUI
                 Console.WriteLine("=== Garage Menu ===");
                 Console.WriteLine("1. Load from the database");
                 Console.WriteLine("2. Enter new vehicle");
-                Console.WriteLine("3. Show list of vehicles' license plate");
+                Console.WriteLine("3. Show list of vehicles' license plate with an option to filter by the status of the vehicles");
                 Console.WriteLine("4. Change vehicle status");
                 Console.WriteLine("5. Inflate wheels to maximum");
                 Console.WriteLine("6. Fill fuelvehicle");
@@ -38,20 +38,20 @@ namespace Ex03.ConsoleUI
                 switch (input)
                 {
                     case "1":
-                        //AddVehicle();
+                        loadVehiclesFromFile();
                         break;
                     case "2":
                         GarageVehicle newVehicle = AddVehicleToGarage();
-                        m_GarageManager.insertVehicleToGarage(newVehicle);
+                        m_GarageManager.InsertVehicleToGarage(newVehicle);
                         break;
                     case "3":
-                        //InflateWheels();
+                        presentLicenseNumbersOfVehiclesInTheGarage();
                         break;
                     case "4":
-
+                        changeExistingVehicleStatus();
                         break;
                     case "5":
-
+                        //InflateWheels();
                         break;
                     case "6":
 
@@ -155,8 +155,7 @@ namespace Ex03.ConsoleUI
             string licenseType = Console.ReadLine();
             //add exception
 
-            eMotorcycleLicenseType LicenseType;
-            if (!Enum.TryParse(licenseType, out LicenseType))
+            if (!Enum.TryParse(licenseType, out eMotorcycleLicenseType LicenseType))
             {
                 //add exception
             }
@@ -234,7 +233,7 @@ namespace Ex03.ConsoleUI
             return numberOfDetailFromUser;
         }
 
-        public void LoadVehiclesFromFile()
+        private void loadVehiclesFromFile()
         {
             //add exceptions to all cases
             string[] vehiclesDetailsFromFile = File.ReadAllLines("Vehicles.db");
@@ -274,18 +273,74 @@ namespace Ex03.ConsoleUI
                         truck.CargoVolume = float.Parse(parts[9]);
                     }
 
-                    GarageVehicle newVehicle = new GarageVehicle(vehicle, licensePlate, modelName);
-                    m_GarageManager.insertVehicleToGarage(newVehicle);
+                    GarageVehicle newVehicle = new GarageVehicle(vehicle, ownerName, ownerPhone);
+                    m_GarageManager.InsertVehicleToGarage(newVehicle);
                 }
                 catch (Exception ex)
-                {
+                {                           //exception
                     Console.WriteLine($"Error loading line: {vehicleDetails}\n{ex.Message}");
                 }
             }
 
             Console.WriteLine("Vehicles loaded successfully from DB.");
         }
+
+        private void presentLicenseNumbersOfVehiclesInTheGarage()
+        {
+            List<string> listOfLicenseNumbers = m_GarageManager.GetLicenseNumbersFromGarage();
+
+            printListOfStrings(listOfLicenseNumbers);
+
+            Console.WriteLine("Whould you like to filter by status? (Y/N)");
+            string userWantToFilterByStatus = Console.ReadLine().ToLower();
+
+            if (userWantToFilterByStatus == "y")
+            {
+                Console.WriteLine("Which status would you like to filter by? (InProgress, Fixed, Payed)");
+                string filterStatusBy = Console.ReadLine();
+
+                if (!Enum.TryParse(filterStatusBy, out GarageVehicle.eVehicleStatus vehicleStatus))
+                {
+                    //exception
+                }
+
+                listOfLicenseNumbers = m_GarageManager.GetLicenseNumbersFromGarage(vehicleStatus);
+                printListOfStrings(listOfLicenseNumbers);
+            }
+            else if(userWantToFilterByStatus == "n")
+            {//nothing
+            }
+            else
+            {
+                //exception
+            }
+
+        } 
+
+
+        private void printListOfStrings(List<string> i_listOfStrings)
+        {
+            foreach (string sentence in i_listOfStrings) //print all list
+            {
+                Console.WriteLine(sentence);
+            }
+        }
+
+        private void changeExistingVehicleStatus()
+        {
+            Console.WriteLine("What is the license number?");
+            string vehicleLicenseNumber = Console.ReadLine();
+            Console.WriteLine("What the new status? (InProgress, Fixed, Payed)");
+            string newStatus = Console.ReadLine();
+            if(!Enum.TryParse(newStatus, out GarageVehicle.eVehicleStatus vehicleStatus)){
+              //exception - not good status
+            }
+            m_GarageManager.changeStatusOfAnExistingVehicleInTheGarage(vehicleLicenseNumber, vehicleStatus);
+
+
+        }
+
     } 
 
-    }
+}
 

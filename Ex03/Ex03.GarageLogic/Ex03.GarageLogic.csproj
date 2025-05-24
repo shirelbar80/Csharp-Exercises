@@ -48,8 +48,8 @@
     <Compile Include="Vehicles\FuelCar.cs" />
     <Compile Include="Vehicles\FuelMotorcycle.cs" />
     <Compile Include="Exceptions\GarageException.cs" />
-    <Compile Include="GarageManager.cs" />
-    <Compile Include="GarageVehicle.cs" />
+    <Compile Include="Garage\GarageManager.cs" />
+    <Compile Include="Garage\GarageVehicle.cs" />
     <Compile Include="Vehicles\Motorcycle.cs" />
     <Compile Include="Vehicles\Truck.cs" />
     <Compile Include="Vehicles\Vehicle.cs" />

@@ -60,6 +60,8 @@ namespace Ex03.GarageLogic
 
         public void setAllWheels(string i_Manufacturerfloat, float i_CurrentAirPressure)
         {
+            Wheels = new List<Wheel>();
+
             for (int i = 0; i < r_NumberOfWheels; i++)
             {
                 Wheels.Add(new Wheel(i_Manufacturerfloat, i_CurrentAirPressure, r_MaxAirPressure));

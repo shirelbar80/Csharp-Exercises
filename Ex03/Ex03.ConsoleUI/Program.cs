@@ -8,7 +8,7 @@ namespace Ex03.ConsoleUI
 {
     public class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             UIManager uIManager = new UIManager();
             uIManager.Run();
