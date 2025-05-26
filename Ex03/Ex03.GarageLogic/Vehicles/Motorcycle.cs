@@ -34,12 +34,6 @@ namespace Ex03.GarageLogic
         public Motorcycle(string i_LicenseID, string i_ModelName) : base(i_LicenseID, i_ModelName, k_NumberOfWheels, k_MaxAirPressure)
         {
         }
-
-        
-
-
-
-       
-
+  
     }
 }

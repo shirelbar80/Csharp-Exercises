@@ -24,10 +24,34 @@ namespace Ex03.GarageLogic
 
         public void InflateWheels(float i_AmountToFill)
         {
-           
+           //Exception maybe
+            if(m_CurrentAirPressure + i_AmountToFill <= m_MaxAirPressure)
+            {
+                m_CurrentAirPressure += i_AmountToFill;
+
+            }
 
 
         }
+
+        public string Manufacturer
+        {
+            get { return m_Manufacturer; }
+            set { m_Manufacturer = value; }
+        }
+
+        public float CurrentAirPressure
+        {
+            get { return m_CurrentAirPressure; }
+            set { m_CurrentAirPressure = value; }
+        }
+
+        public float MaxAirPressure
+        {
+            get { return m_MaxAirPressure; }
+            set { m_MaxAirPressure = value; }
+        }
+
 
 
 

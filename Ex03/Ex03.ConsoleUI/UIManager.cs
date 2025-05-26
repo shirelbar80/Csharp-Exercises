@@ -51,16 +51,16 @@ namespace Ex03.ConsoleUI
                         changeExistingVehicleStatus();
                         break;
                     case "5":
-                        //InflateWheels();
+                        inflateWheels();
                         break;
                     case "6":
-
+                        fillFuelVehicle();
                         break;
                     case "7":
-
+                        chargeElectricVehicle();
                         break;
                     case "8":
-
+                        getDetailesOfVehicle();
                         break;
                     case "9":
                         exit = true;
@@ -340,7 +340,60 @@ namespace Ex03.ConsoleUI
 
         }
 
-    } 
+        private void inflateWheels()
+        {
 
+            Console.WriteLine("What is the license number?");
+            string vehicleLicenseNumber = Console.ReadLine();
+            m_GarageManager.inflateTiresAirPressureToMax(vehicleLicenseNumber);
+            //think about exception if license does not exist
+        }
+
+        private void fillFuelVehicle()
+        {
+            Console.WriteLine("What is the license number?");
+            string vehicleLicenseNumber = Console.ReadLine();
+            Console.WriteLine("Enter the desired fuel type:");
+            string fuelType = Console.ReadLine();
+            if (!Enum.TryParse(fuelType, out eFuelType vehicleFuelType))
+            {
+                //exception - not good status
+            }
+            Console.WriteLine("What is the amount you want to fill?");
+            string amountToFill = Console.ReadLine();
+            if (!float.TryParse(amountToFill, out float amountToFillFuelCar))
+            {
+                //add exception - did not succeeded parse
+            }
+            m_GarageManager.fillFuelBasedVehicle(vehicleLicenseNumber, vehicleFuelType, amountToFillFuelCar);
+
+        }
+
+
+        private void chargeElectricVehicle()
+        {
+            Console.WriteLine("What is the license number?");
+            string vehicleLicenseNumber = Console.ReadLine();
+            Console.WriteLine("What is the amount of minutes you want to fill?");
+            string amountToFill = Console.ReadLine();
+            if (!float.TryParse(amountToFill, out float amountToFillElectricCar))
+            {
+                //add exception - did not succeeded parse
+            }
+            m_GarageManager.chargeElectricCar(vehicleLicenseNumber, amountToFillElectricCar);
+
+
+        }
+
+        private void getDetailesOfVehicle()
+        {
+            Console.WriteLine("What is the license number?");
+            string vehicleLicenseNumber = Console.ReadLine();
+            string vehicleData = m_GarageManager.GetVehicleData(vehicleLicenseNumber);
+            Console.WriteLine("=== Vehicle Information ===");
+            Console.WriteLine(vehicleData);
+
+        }
+    }
 }
 

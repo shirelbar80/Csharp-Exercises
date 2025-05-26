@@ -12,11 +12,18 @@ namespace Ex03.GarageLogic
 
         public Electric(float i_EnergyPrecentageRemaining, float i_CurrentAmount, float i_MaxAmount) : base(i_EnergyPrecentageRemaining, i_CurrentAmount, i_MaxAmount){}
 
-        public override void FillEnergySource(float i_AmountOfEnergyToFill)
+
+        public void Recharge(float i_MinutesToCharge)
         {
+            if (i_MinutesToCharge < 0 || CurrentAmount + i_MinutesToCharge > MaxAmount)
+            {
+                //exception
+            }
 
+            float hoursToCharge = (float)i_MinutesToCharge / 60;
+
+            AddEnergy(hoursToCharge);
         }
-
 
 
 

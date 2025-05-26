@@ -13,7 +13,6 @@ namespace Ex03.GarageLogic
             InProgress, Fixed, Payed
         }
 
-
         private Vehicle m_Vehicle;
         private string m_OwnerName;
         private string m_OwnerPhone;

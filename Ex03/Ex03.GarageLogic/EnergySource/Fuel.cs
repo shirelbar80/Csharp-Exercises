@@ -23,15 +23,20 @@ namespace Ex03.GarageLogic
             m_FuelType = i_FuelType;
         }
 
-
-
-
-        public override void FillEnergySource(float i_AmountOfEnergyToFill)
+        public void Refuel(eFuelType i_FuelType, float i_Amount)
         {
+            if (i_Amount < 0 || CurrentAmount + i_Amount > MaxAmount)
+            {
+                //exception
+            }
 
+            AddEnergy(i_Amount); // from EnergySource
         }
 
-
-
+        public eFuelType FuelType
+        {
+            get { return m_FuelType; }
+            set { m_FuelType = value; }
+        }
     }
 }
