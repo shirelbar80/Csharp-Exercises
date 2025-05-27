@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Ex03.GarageLogic.Exceptions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,10 +26,14 @@ namespace Ex03.GarageLogic
         public void InflateWheels(float i_AmountToFill)
         {
            //Exception maybe
-            if(m_CurrentAirPressure + i_AmountToFill <= m_MaxAirPressure)
+            if(m_CurrentAirPressure + i_AmountToFill <= MaxAirPressure)
             {
                 m_CurrentAirPressure += i_AmountToFill;
 
+            }
+            else
+            {
+                throw new ValueRangeException(MaxAirPressure, 0, $"Air pressure should be between 0 and {MaxAirPressure}.");
             }
 
 

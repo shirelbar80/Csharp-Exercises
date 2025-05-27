@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Ex03.GarageLogic.Exceptions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,6 +22,10 @@ namespace Ex03.GarageLogic
 
         protected void AddEnergy(float i_Amount)
         {
+            if (m_CurrentAmount + i_Amount > m_MaxAmount)
+            {
+                throw new ValueRangeException(m_MaxAmount, 0, $"The sum of the current amount and the amount to add exceeds the maximum amount '{m_MaxAmount}'");
+            }
             m_CurrentAmount += i_Amount;
             m_EnergyPrecentageRemaining = (float)(m_CurrentAmount / m_MaxAmount) * 100;
         }

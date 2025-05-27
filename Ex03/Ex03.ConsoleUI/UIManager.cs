@@ -35,29 +35,36 @@ namespace Ex03.ConsoleUI
             bool exit = false;
             while (!exit)
             {
-                Console.WriteLine("=== Garage Menu ===");
-                Console.WriteLine("1. Load from the database");
-                Console.WriteLine("2. Enter new vehicle");
-                Console.WriteLine("3. Show list of vehicles' license plate with an option to filter by the status of the vehicles");
-                Console.WriteLine("4. Change vehicle status");
-                Console.WriteLine("5. Inflate wheels to maximum");
-                Console.WriteLine("6. Fill fuelvehicle");
-                Console.WriteLine("7. Charge electric vehicle");
-                Console.WriteLine("8. Show vehicle information");
-                Console.WriteLine("9. Exit");
+                printMenu();
                 Console.Write("Choose: ");
-                string input = Console.ReadLine();
+                string chosedAction = Console.ReadLine();
 
-                switch (input)
+                switch (chosedAction)
                 {
                     case "1":
                         try
                         {
                             m_VehicleUI.loadVehiclesFromFile();
                         }
-                        catch(ValueRangeException valueRangeException)
+                        catch (ValueRangeException valueRangeException)
                         {
                             Console.WriteLine(valueRangeException.Message); //show message to the user
+                            Console.WriteLine();
+                        }
+                        catch(FormatException formatException)
+                        {
+                            Console.WriteLine(formatException.Message); //show message to the user
+                            Console.WriteLine();
+                        }
+                        catch(ArgumentException argumentException)
+                        {
+                            Console.WriteLine(argumentException.Message); //show message to the user
+                            Console.WriteLine();
+                        }
+                        catch (Exception exception)
+                        {
+                            Console.WriteLine($"Error loading line\n{exception.Message}");
+                            Console.WriteLine();
                         }
                         break;
                     case "2":
@@ -69,24 +76,28 @@ namespace Ex03.ConsoleUI
                         catch (VehicleInTheGarageException vehicleInTheGarageException)
                         {
                             Console.WriteLine(vehicleInTheGarageException.Message); //show message to the user
+                            Console.WriteLine();
 
                             if (vehicleInTheGarageException.VehicleIsInTheGarage)  //vehicle is in the garage
                             {
                                 m_GarageManager.changeStatusOfAnExistingVehicleInTheGarage(vehicleInTheGarageException.LicenseID, GarageVehicle.eVehicleStatus.InProgress);//change status to InProgress
                             }
                         }
-                        catch (ArgumentException argumentException)
+                        /*catch (ArgumentException argumentException)
                         {
                             Console.WriteLine(argumentException.Message); //show message to the user
+                            Console.WriteLine();
                         }
                         catch (FormatException formatException)
                         {
                             Console.WriteLine(formatException.Message); //show message to the user
+                            Console.WriteLine();
 
-                        }
+                        }*/
                         catch (Exception exception)
                         {
                             Console.WriteLine(exception.Message); //show message to the user
+                            Console.WriteLine();
                         }
                             break;
                     case "3":
@@ -94,35 +105,158 @@ namespace Ex03.ConsoleUI
                         {
                             m_Actions.presentLicenseNumbersOfVehiclesInTheGarage();
                         }
-                        catch(FormatException formatException)
+                        catch(Exception exception)
                         {
-                            Console.WriteLine(formatException.Message); //show message to the user
+                            Console.WriteLine(exception.Message); //show message to the user
+                            Console.WriteLine();
                         }
 
                         break;
                     case "4":
-                        m_Actions.changeExistingVehicleStatus();
+                        try
+                        {
+                            m_Actions.changeExistingVehicleStatus();
+                        }
+                        catch (Exception exception)
+                        {
+                            Console.WriteLine(exception.Message); //show message to the user
+                            Console.WriteLine();
+                        }
                         break;
                     case "5":
-                        m_Actions.inflateWheels();
+                        try
+                        {
+                            m_Actions.inflateWheels();
+                        }
+                       /* catch (VehicleInTheGarageException vehicleInTheGarageException)
+                        {
+                            Console.WriteLine(vehicleInTheGarageException.Message); //show message to the user
+                            Console.WriteLine();
+
+                        }
+                        catch (ArgumentException argumentException)
+                        {
+                            Console.WriteLine(argumentException.Message); //show message to the user
+                            Console.WriteLine();
+                        }
+                        catch (FormatException formatException)
+                        {
+                            Console.WriteLine(formatException.Message); //show message to the user
+                            Console.WriteLine();
+
+                        }*/
+                        catch (Exception exception)
+                        {
+                            Console.WriteLine(exception.Message); //show message to the user
+                            Console.WriteLine();
+                        }
                         break;
                     case "6":
-                        m_Actions.fillFuelVehicle();
+                        try
+                        {
+                            m_Actions.fillFuelVehicle();
+                        }
+                        /*catch (VehicleInTheGarageException vehicleInTheGarageException)
+                        {
+                            Console.WriteLine(vehicleInTheGarageException.Message); //show message to the user
+                            Console.WriteLine();
+
+                        }
+                        catch (ArgumentException argumentException)
+                        {
+                            Console.WriteLine(argumentException.Message); //show message to the user
+                            Console.WriteLine();
+                        }
+                        catch (FormatException formatException)
+                        {
+                            Console.WriteLine(formatException.Message); //show message to the user
+                            Console.WriteLine();
+
+                        }*/
+                        catch (Exception exception)
+                        {
+                            Console.WriteLine(exception.Message); //show message to the user
+                            Console.WriteLine();
+                        }
                         break;
                     case "7":
-                        m_Actions.chargeElectricVehicle();
+                        try
+                        {
+                            m_Actions.chargeElectricVehicle();
+                        }
+                        /*catch (VehicleInTheGarageException vehicleInTheGarageException)
+                        {
+                            Console.WriteLine(vehicleInTheGarageException.Message); //show message to the user
+                            Console.WriteLine();
+
+                        }
+                        catch (ArgumentException argumentException)
+                        {
+                            Console.WriteLine(argumentException.Message); //show message to the user
+                            Console.WriteLine();
+                        }
+                        catch (FormatException formatException)
+                        {
+                            Console.WriteLine(formatException.Message); //show message to the user
+                            Console.WriteLine();
+
+                        }*/
+                        catch (Exception exception)
+                        {
+                            Console.WriteLine(exception.Message); //show message to the user
+                            Console.WriteLine();
+                        }
                         break;
                     case "8":
-                        m_Actions.getDetailesOfVehicle();
+                        try
+                        {
+                            m_Actions.getDetailesOfVehicle();
+                        }
+                       /* catch (VehicleInTheGarageException vehicleInTheGarageException)
+                        {
+                            Console.WriteLine(vehicleInTheGarageException.Message); //show message to the user
+                            Console.WriteLine();
+
+                        }
+                        catch (ArgumentException argumentException)
+                        {
+                            Console.WriteLine(argumentException.Message); //show message to the user
+                            Console.WriteLine();
+                        }
+                        catch (FormatException formatException)
+                        {
+                            Console.WriteLine(formatException.Message); //show message to the user
+                            Console.WriteLine();
+
+                        }*/
+                        catch (Exception exception)
+                        {
+                            Console.WriteLine(exception.Message); //show message to the user
+                            Console.WriteLine();
+                        }
                         break;
                     case "9":
                         exit = true;
                         break;
                     default:
-                        Console.WriteLine("Invalid choice.");
+                        Console.WriteLine("Invalid choice, try again.");
                         break;
                 }
             }
+        }
+
+        private void printMenu()
+        {
+            Console.WriteLine("=== Garage Menu ===");
+            Console.WriteLine("1. Load from the database");
+            Console.WriteLine("2. Enter new vehicle");
+            Console.WriteLine("3. Show list of vehicles' license plate with an option to filter by the status of the vehicles");
+            Console.WriteLine("4. Change vehicle status");
+            Console.WriteLine("5. Inflate wheels to maximum");
+            Console.WriteLine("6. Fill fuelvehicle");
+            Console.WriteLine("7. Charge electric vehicle");
+            Console.WriteLine("8. Show vehicle information");
+            Console.WriteLine("9. Exit");
         }
 
        

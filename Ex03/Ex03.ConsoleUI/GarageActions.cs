@@ -63,7 +63,11 @@ namespace Ex03.ConsoleUI
         {
             Console.WriteLine("What is the license number?");
             string vehicleLicenseNumber = Console.ReadLine();
-            Console.WriteLine("What the new status? (InProgress, Fixed, Payed)");
+            if (vehicleLicenseNumber.Length != 9)
+            {
+                throw new FormatException("License number must be exactly 9 characters.");
+            }
+            Console.WriteLine("What is the new status? (InProgress, Fixed, Payed)");
             string newStatus = Console.ReadLine();
             if (!Enum.TryParse(newStatus, out GarageVehicle.eVehicleStatus vehicleStatus))
             {
@@ -79,6 +83,10 @@ namespace Ex03.ConsoleUI
 
             Console.WriteLine("What is the license number?");
             string vehicleLicenseNumber = Console.ReadLine();
+            if (vehicleLicenseNumber.Length != 9)
+            {
+                throw new FormatException("License number must be exactly 9 characters.");
+            }
             if (!m_GarageManager.isVehicleInTheGarage(vehicleLicenseNumber))
             {
                 throw new VehicleInTheGarageException(vehicleLicenseNumber, false, $"Vehicle {vehicleLicenseNumber} doesn't exists in the garage.");
@@ -90,6 +98,10 @@ namespace Ex03.ConsoleUI
         {
             Console.WriteLine("What is the license number?");
             string vehicleLicenseNumber = Console.ReadLine();
+            if (vehicleLicenseNumber.Length != 9)
+            {
+                throw new FormatException("License number must be exactly 9 characters.");
+            }
             Console.WriteLine("Enter the desired fuel type:");
             string fuelType = Console.ReadLine();
             if (!Enum.TryParse(fuelType, out eFuelType vehicleFuelType))
@@ -107,13 +119,16 @@ namespace Ex03.ConsoleUI
         {
             Console.WriteLine("What is the license number?");
             string vehicleLicenseNumber = Console.ReadLine();
+            if (vehicleLicenseNumber.Length != 9)
+            {
+                throw new FormatException("License number must be exactly 9 characters.");
+            }
             if (!m_GarageManager.isVehicleInTheGarage(vehicleLicenseNumber))
             {
                 throw new VehicleInTheGarageException(vehicleLicenseNumber, false, $"Vehicle {vehicleLicenseNumber} doesn't exists in the garage.");
             }
 
             Console.WriteLine("What is the amount of minutes you want to fill?");
-
             float amountToFillElectricCar = getDetailAndTryFloatParse();
             m_GarageManager.chargeElectricCar(vehicleLicenseNumber, amountToFillElectricCar);
         }
@@ -122,6 +137,10 @@ namespace Ex03.ConsoleUI
         {
             Console.WriteLine("What is the license number?");
             string vehicleLicenseNumber = Console.ReadLine();
+            if (vehicleLicenseNumber.Length != 9)
+            {
+                throw new FormatException("License number must be exactly 9 characters.");
+            }
             if (!m_GarageManager.isVehicleInTheGarage(vehicleLicenseNumber))
             {
                 throw new VehicleInTheGarageException(vehicleLicenseNumber, false, $"Vehicle {vehicleLicenseNumber} doesn't exists in the garage.");

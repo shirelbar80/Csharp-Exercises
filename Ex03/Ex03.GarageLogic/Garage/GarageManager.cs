@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Ex03.GarageLogic.Exceptions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
@@ -44,8 +45,12 @@ namespace Ex03.GarageLogic
 
         public void changeStatusOfAnExistingVehicleInTheGarage(string i_LicenseNumber, GarageVehicle.eVehicleStatus newStatus)
         {
+            if (!isVehicleInTheGarage(i_LicenseNumber))
+            {
+                throw new VehicleInTheGarageException(i_LicenseNumber, false, $"Vehicle {i_LicenseNumber} doesn't exists in the garage.");
+            }
             m_Vehicles[i_LicenseNumber].VehicleStatus = newStatus;
-            //catch exception KeyNotFoundException
+            
         }
 
 
@@ -57,16 +62,19 @@ namespace Ex03.GarageLogic
                 throw new VehicleInTheGarageException(i_LicenseNumber, false, $"Vehicle {i_LicenseNumber} doesn't exists in the garage.");
 
             }
-
             Vehicle currentVehicle = m_Vehicles[i_LicenseNumber].Vehicle;
             
          
             foreach (Wheel wheel in currentVehicle.Wheels)
             {
                 float amountToAdd = currentVehicle.MaxAirPressure - wheel.CurrentAirPressure;
-                if (amountToAdd > 0)
+                if (amountToAdd >= 0)
                 {
                     wheel.InflateWheels(amountToAdd);
+                }
+                else
+                {
+                    throw new ValueRangeException(currentVehicle.MaxAirPressure, 0, "The amount to add to the wheels cannot be a negetive number.");
                 }
             }
 
@@ -80,7 +88,11 @@ namespace Ex03.GarageLogic
                 throw new VehicleInTheGarageException(i_LicenseNumber, false, $"Vehicle {i_LicenseNumber} doesn't exists in the garage.");
             }
             Vehicle currentVehicle = m_Vehicles[i_LicenseNumber].Vehicle;
-            if((currentVehicle is Car && i_fuelType != Fuel.eFuelType.Octan95) || (currentVehicle is Motorcycle && i_fuelType != Fuel.eFuelType.Octan98)
+            if (!(currentVehicle.EnergySource is Fuel))
+            {
+                throw new ArgumentException("Invalid vehicle, trying to fuel the tank of an electric vehicle.");
+            }
+            if ((currentVehicle is Car && i_fuelType != Fuel.eFuelType.Octan95) || (currentVehicle is Motorcycle && i_fuelType != Fuel.eFuelType.Octan98)
                 || (currentVehicle is Truck && i_fuelType != Fuel.eFuelType.Soler))
             {
                 throw new ArgumentException("Fuel type is not matching the type of vehicle.");
@@ -97,6 +109,10 @@ namespace Ex03.GarageLogic
                 throw new VehicleInTheGarageException(i_LicenseNumber, false, $"Vehicle {i_LicenseNumber} doesn't exists in the garage.");
             }
             Vehicle currentVehicle = m_Vehicles[i_LicenseNumber].Vehicle;
+            if(!(currentVehicle.EnergySource is Electric))
+            {
+                throw new ArgumentException("Invalid vehicle, trying to charge the battery of a fuel vehicle.");
+            }
 
             Electric electric = currentVehicle.EnergySource as Electric;
             electric.Recharge(i_MinutesToCharge);

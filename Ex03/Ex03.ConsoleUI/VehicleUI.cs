@@ -113,6 +113,7 @@ namespace Ex03.ConsoleUI
             {
                 throw new FormatException("Invalid motorcycle license type.");
             }
+
             i_Motorcycle.LicenseType = LicenseType;
 
 
@@ -184,55 +185,109 @@ namespace Ex03.ConsoleUI
 
         public void loadVehiclesFromFile()
         {
-            //add exceptions to all cases
             string[] vehiclesDetailsFromFile = File.ReadAllLines("Vehicles.db");
 
             foreach (string vehicleDetails in vehiclesDetailsFromFile)
             {
-                try
+                string[] parts = vehicleDetails.Split(',');
+
+                string vehicleType = parts[0];
+                string licensePlate = parts[1];
+                if (licensePlate.Length != 9)
                 {
-                    string[] parts = vehicleDetails.Split(',');
-
-                    string vehicleType = parts[0];
-                    string licensePlate = parts[1];
-                    string modelName = parts[2];
-                    float energyPercentage = float.Parse(parts[3]);
-                    string tierModel = parts[4];
-                    float currAirPressure = float.Parse(parts[5]);
-                    string ownerName = parts[6];
-                    string ownerPhone = parts[7];
-
-                    Vehicle vehicle = VehicleCreator.CreateVehicle(vehicleType, licensePlate, modelName);
-                    vehicle.setAllWheels(tierModel, currAirPressure);
-                    vehicle.setEnergySource(energyPercentage, 0); // temp current amount, updated below
-
-                    if (vehicle is Car car)
-                    {
-                        car.CarColor = (Car.eCarColours)Enum.Parse(typeof(Car.eCarColours), parts[8]);
-                        car.DoorsAmount = (Car.eDoorsAmount)int.Parse(parts[9]);
-                    }
-                    else if (vehicle is Motorcycle motorcycle)
-                    {
-                        motorcycle.LicenseType = (Motorcycle.eMotorcycleLicenseType)Enum.Parse(typeof(Motorcycle.eMotorcycleLicenseType), parts[8]);
-                        motorcycle.EngineVolume = int.Parse(parts[9]);
-                    }
-                    else if (vehicle is Truck truck)
-                    {
-                        truck.DangeresCargo = bool.Parse(parts[8]);
-                        truck.CargoVolume = float.Parse(parts[9]);
-                    }
-
-                    GarageVehicle newVehicle = new GarageVehicle(vehicle, ownerName, ownerPhone);
-                    m_GarageManager.InsertVehicleToGarage(newVehicle);
+                    throw new FormatException("License number must be exactly 9 characters.");
                 }
-                catch (Exception exception)
+                string modelName = parts[2];
+
+                if (!float.TryParse(parts[3], out float energyPercentage))
                 {
-                    Console.WriteLine($"Error loading line: {vehicleDetails}\n{exception.Message}");
+                    throw new FormatException($"Invalid energy percentage: '{parts[3]}'");
                 }
+                if(energyPercentage < 0 || energyPercentage > 100)
+                {
+                    throw new ValueRangeException(100, 0, $"Precentage value '{energyPercentage}' is not in the correct range between 0 and 100.");
+                }   
+
+                string tierModel = parts[4];
+
+                if (!float.TryParse(parts[5], out float currAirPressure))
+                {
+                    throw new FormatException($"Invalid tire air pressure: '{parts[5]}'");
+                }
+                if(currAirPressure < 0)
+                {
+                    throw new ValueRangeException(float.MaxValue, 0, "Tire pressure cannot be a negetive number.");
+                }
+
+                string ownerName = parts[6];
+                string ownerPhone = parts[7];
+                checkPhoneNumberIsValid(ownerPhone);
+
+                Vehicle vehicle = VehicleCreator.CreateVehicle(vehicleType, licensePlate, modelName);
+                if (vehicle == null)      //type not supported
+                {
+                    throw new ArgumentException($"Vehicle type '{vehicleType}' is not supported by the system.");
+                }
+                vehicle.setAllWheels(tierModel, currAirPressure);
+                vehicle.setEnergySource(energyPercentage, 0); // temp current amount
+
+                if (vehicle is Car car)
+                {
+                    if (!Enum.TryParse(parts[8], out Car.eCarColours carColor))
+                    {
+                        throw new FormatException($"Invalid car color: '{parts[8]}'");
+                    }
+
+                    if (!int.TryParse(parts[9], out int doorsAmount))
+                    {
+                        throw new FormatException($"Invalid number of doors: '{parts[9]}'");
+                    }
+
+                    car.CarColor = carColor;
+                    car.DoorsAmount = (Car.eDoorsAmount)doorsAmount;
+                }
+                else if (vehicle is Motorcycle motorcycle)
+                {
+                    if (!Enum.TryParse(parts[8], out Motorcycle.eMotorcycleLicenseType licenseType))
+                    {
+                        throw new FormatException($"Invalid motorcycle license type: '{parts[8]}'");
+                    }
+
+                    if (!int.TryParse(parts[9], out int engineVolume))
+                    {
+                        throw new FormatException($"Invalid engine volume: '{parts[9]}'");
+                    }
+
+                    motorcycle.LicenseType = licenseType;
+                    motorcycle.EngineVolume = engineVolume;
+                }
+                else if (vehicle is Truck truck)
+                {
+                    if (!bool.TryParse(parts[8], out bool dangerousCargo))
+                    {
+                        throw new FormatException($"Invalid dangerous cargo value: '{parts[8]}'");
+                    }
+
+                    if (!float.TryParse(parts[9], out float cargoVolume))
+                    {
+                        throw new FormatException($"Invalid cargo volume: '{parts[9]}'");
+                    }
+
+                    truck.DangeresCargo = dangerousCargo;
+                    truck.CargoVolume = cargoVolume;
+                }
+
+                GarageVehicle newVehicle = new GarageVehicle(vehicle, ownerName, ownerPhone);
+                m_GarageManager.InsertVehicleToGarage(newVehicle);
+                
+                
             }
 
             Console.WriteLine("Vehicles loaded successfully from DB.");
+            Console.WriteLine();
+
         }
+
 
         public void checkPhoneNumberIsValid(string i_PhoneNumber)
         {
