@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -50,12 +51,19 @@ namespace Ex03.GarageLogic
 
         public void inflateTiresAirPressureToMax(string i_LicenseNumber)
         {
+            
+            if(!isVehicleInTheGarage(i_LicenseNumber)){
 
-            Vehicle i_CurrentVehicle = m_Vehicles[i_LicenseNumber].Vehicle;
+                throw new VehicleInTheGarageException(i_LicenseNumber, false, $"Vehicle {i_LicenseNumber} doesn't exists in the garage.");
 
-            foreach (Wheel wheel in i_CurrentVehicle.Wheels)
+            }
+
+            Vehicle currentVehicle = m_Vehicles[i_LicenseNumber].Vehicle;
+            
+         
+            foreach (Wheel wheel in currentVehicle.Wheels)
             {
-                float amountToAdd = i_CurrentVehicle.MaxAirPressure - wheel.CurrentAirPressure;
+                float amountToAdd = currentVehicle.MaxAirPressure - wheel.CurrentAirPressure;
                 if (amountToAdd > 0)
                 {
                     wheel.InflateWheels(amountToAdd);
@@ -67,21 +75,30 @@ namespace Ex03.GarageLogic
 
         public void fillFuelBasedVehicle(string i_LicenseNumber,Fuel.eFuelType i_fuelType,float i_amountToFill)
         {
+            if (!isVehicleInTheGarage(i_LicenseNumber))
+            { 
+                throw new VehicleInTheGarageException(i_LicenseNumber, false, $"Vehicle {i_LicenseNumber} doesn't exists in the garage.");
+            }
+            Vehicle currentVehicle = m_Vehicles[i_LicenseNumber].Vehicle;
+            if((currentVehicle is Car && i_fuelType != Fuel.eFuelType.Octan95) || (currentVehicle is Motorcycle && i_fuelType != Fuel.eFuelType.Octan98)
+                || (currentVehicle is Truck && i_fuelType != Fuel.eFuelType.Soler))
+            {
+                throw new ArgumentException("Fuel type is not matching the type of vehicle.");
+            }
 
-            Vehicle i_CurrentVehicle = m_Vehicles[i_LicenseNumber].Vehicle;
-
-            Fuel fuel = i_CurrentVehicle.EnergySource as Fuel;
+            Fuel fuel = currentVehicle.EnergySource as Fuel;
             fuel.Refuel(i_fuelType, i_amountToFill);
-            
-
         }
 
         public void chargeElectricCar(string i_LicenseNumber, float i_MinutesToCharge)
         {
+            if (!isVehicleInTheGarage(i_LicenseNumber))
+            {
+                throw new VehicleInTheGarageException(i_LicenseNumber, false, $"Vehicle {i_LicenseNumber} doesn't exists in the garage.");
+            }
+            Vehicle currentVehicle = m_Vehicles[i_LicenseNumber].Vehicle;
 
-            Vehicle i_CurrentVehicle = m_Vehicles[i_LicenseNumber].Vehicle;
-
-            Electric electric = i_CurrentVehicle.EnergySource as Electric;
+            Electric electric = currentVehicle.EnergySource as Electric;
             electric.Recharge(i_MinutesToCharge);
         }
 

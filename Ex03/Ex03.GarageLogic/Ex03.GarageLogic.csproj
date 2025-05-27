@@ -39,6 +39,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exceptions\ValueRangeException.cs" />
     <Compile Include="Vehicles\Car.cs" />
     <Compile Include="EnergySource\Electric.cs" />
     <Compile Include="Vehicles\ElectricCar.cs" />
@@ -47,7 +48,7 @@
     <Compile Include="EnergySource\Fuel.cs" />
     <Compile Include="Vehicles\FuelCar.cs" />
     <Compile Include="Vehicles\FuelMotorcycle.cs" />
-    <Compile Include="Exceptions\GarageException.cs" />
+    <Compile Include="Exceptions\VehicleInTheGarageException.cs" />
     <Compile Include="Garage\GarageManager.cs" />
     <Compile Include="Garage\GarageVehicle.cs" />
     <Compile Include="Vehicles\Motorcycle.cs" />

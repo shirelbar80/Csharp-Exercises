@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Ex03.GarageLogic.Exceptions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,7 +17,7 @@ namespace Ex03.GarageLogic
 
 
         private float m_CargoVolume;
-        private bool m_DangeresCargo;
+        private bool m_DangerousCargo;
 
         public Truck(string i_LicenseID, string i_ModelName) : base(i_LicenseID, i_ModelName, k_NumberOfWheels, k_MaxAirPressure)
         {
@@ -24,6 +25,10 @@ namespace Ex03.GarageLogic
 
         public override void setEnergySource(float i_EnergyPrecentageRemaining, float i_CurrentAmount)
         {
+            if (i_CurrentAmount < 0 || i_CurrentAmount > k_MaxFuelAmount)
+            {
+                throw new ValueRangeException(k_MaxFuelAmount, 0, $"Invalid current amount, should be between 0 and {k_MaxFuelAmount}");
+            }
             EnergySource = new Fuel(k_FuelType, i_EnergyPrecentageRemaining, i_CurrentAmount, k_MaxFuelAmount);
         }
 
@@ -35,8 +40,8 @@ namespace Ex03.GarageLogic
 
         public bool DangeresCargo
         {
-            get { return m_DangeresCargo; }
-            set { m_DangeresCargo = value; }
+            get { return m_DangerousCargo; }
+            set { m_DangerousCargo = value; }
         }
     }
 }

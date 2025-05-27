@@ -1,9 +1,12 @@
 ﻿using Ex03.GarageLogic;
+using Ex03.GarageLogic.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -38,7 +41,14 @@ namespace Ex03.ConsoleUI
                 switch (input)
                 {
                     case "1":
-                        loadVehiclesFromFile();
+                        try
+                        {
+                            loadVehiclesFromFile();
+                        }
+                        catch(ValueRangeException valueRangeException)
+                        {
+                            Console.WriteLine(valueRangeException.Message); //show message to the user
+                        }
                         break;
                     case "2":
                         try
@@ -46,14 +56,39 @@ namespace Ex03.ConsoleUI
                             GarageVehicle newVehicle = AddVehicleToGarage();
                             m_GarageManager.InsertVehicleToGarage(newVehicle);
                         }
-                        catch (VehicleAlreadyExistsException vehicleExistsException)
+                        catch (VehicleInTheGarageException vehicleInTheGarageException)
                         {
-                            Console.WriteLine(vehicleExistsException.Message); //show message to the user
-                            m_GarageManager.changeStatusOfAnExistingVehicleInTheGarage(vehicleExistsException.LicenseID, GarageVehicle.eVehicleStatus.InProgress);//change status to InProgress
+                            Console.WriteLine(vehicleInTheGarageException.Message); //show message to the user
+
+                            if (vehicleInTheGarageException.VehicleIsInTheGarage)  //vehicle is in the garage
+                            {
+                                m_GarageManager.changeStatusOfAnExistingVehicleInTheGarage(vehicleInTheGarageException.LicenseID, GarageVehicle.eVehicleStatus.InProgress);//change status to InProgress
+                            }
                         }
-                        break;
+                        catch (ArgumentException argumentException)
+                        {
+                            Console.WriteLine(argumentException.Message); //show message to the user
+                        }
+                        catch (FormatException formatException)
+                        {
+                            Console.WriteLine(formatException.Message); //show message to the user
+
+                        }
+                        catch (Exception exception)
+                        {
+                            Console.WriteLine(exception.Message); //show message to the user
+                        }
+                            break;
                     case "3":
-                        presentLicenseNumbersOfVehiclesInTheGarage();
+                        try
+                        {
+                            presentLicenseNumbersOfVehiclesInTheGarage();
+                        }
+                        catch(FormatException formatException)
+                        {
+                            Console.WriteLine(formatException.Message); //show message to the user
+                        }
+
                         break;
                     case "4":
                         changeExistingVehicleStatus();
@@ -84,24 +119,26 @@ namespace Ex03.ConsoleUI
         {
             Console.Write("Enter license number: ");
             string licenseNumber = Console.ReadLine();
-
+            if (licenseNumber.Length != 9)
+            {
+                throw new FormatException("License number must be exactly 9 characters.");
+            }
             if (m_GarageManager.isVehicleInTheGarage(licenseNumber))
             {
-                throw new VehicleAlreadyExistsException(licenseNumber);
+                throw new VehicleInTheGarageException(licenseNumber,true, $"Vehicle {licenseNumber} already exists in the garage.");
             }
             
             Console.WriteLine("What type of vehicle would you like to insert the garage?");
             string vehicleType = Console.ReadLine();
-            //add exception
 
             Console.Write("Enter model name: ");
             string modelName = Console.ReadLine();
 
             //creating the car here 
             Vehicle vehicle = VehicleCreator.CreateVehicle(vehicleType, licenseNumber, modelName);
-            if(vehicle == null)      //type not good
+            if(vehicle == null)      //type not supported
             {
-                
+                throw new ArgumentException($"Vehicle type '{vehicleType}' is not supported by the system.");   
             }
 
             setWheelsFromUser(vehicle);
@@ -111,12 +148,18 @@ namespace Ex03.ConsoleUI
 
             Console.Write("Enter phone number: ");
             string phoneNumber = Console.ReadLine();
+            checkPhoneNumberIsValid(phoneNumber);
 
             Console.WriteLine("Enter energy precentage remaining: ");
             float precentageOfEnergyRemaining = getDetailAndTryFloatParse();
+            if(precentageOfEnergyRemaining < 0 ||  precentageOfEnergyRemaining > 100)
+            {
+                throw new ValueRangeException(100, 0, "Precentage value should be between 0 and 100.");
+            }
 
             Console.WriteLine("Enter current energy amount: ");
             float currentEnergyAmount = getDetailAndTryFloatParse();
+
 
             vehicle.setEnergySource(precentageOfEnergyRemaining, currentEnergyAmount);
 
@@ -136,10 +179,7 @@ namespace Ex03.ConsoleUI
 
             GarageVehicle vehicleToInsertToGarage = new GarageVehicle(vehicle, ownerName, phoneNumber);
 
-            //delete this later
-
-
-            Console.WriteLine("Vehicle added.");
+        
             return vehicleToInsertToGarage;
         }
 
@@ -161,15 +201,15 @@ namespace Ex03.ConsoleUI
 
             i_Vehicle.Wheels = wheelsSet;
         }
+
+
         private void getDetailsAndSetMotorcycle(Motorcycle i_Motorcycle)
         {
             Console.WriteLine("Enter license type: ");
             string licenseType = Console.ReadLine();
-            //add exception
-
             if (!Enum.TryParse(licenseType, out eMotorcycleLicenseType LicenseType))
             {
-                //add exception
+                throw new FormatException("Invalid motorcycle license type.");
             }
             i_Motorcycle.LicenseType = LicenseType;
 
@@ -178,7 +218,11 @@ namespace Ex03.ConsoleUI
             string engineVolume = Console.ReadLine();
             if (!int.TryParse(engineVolume, out int numberOfEngineVolume))
             {
-                //add exception - did not succeeded parse
+                throw new FormatException("Invalid engine volume.");
+            }
+            if (numberOfEngineVolume < 0)
+            {
+                throw new ValueRangeException(float.MaxValue, 0, "Engine volume cannot be a negetive number.");
             }
             i_Motorcycle.EngineVolume = numberOfEngineVolume;
 
@@ -188,21 +232,19 @@ namespace Ex03.ConsoleUI
         private void getDetailsAndSetCar(Car i_Car)
         {
 
-            Console.WriteLine("Enter colour type: ");
+            Console.WriteLine("Enter car colour: ");
             string colour = Console.ReadLine();
-            eCarColours ColourType;
-            if (!Enum.TryParse(colour, out ColourType))
+            if (!Enum.TryParse(colour, out eCarColours ColourType))
             {
-                //add exception
+                throw new FormatException("Invalid car colour.");
             }
             i_Car.CarColor = ColourType;
 
-            Console.WriteLine("Enter colour type: ");
+            Console.WriteLine("Enter the amount of doors the car has: ");
             string doors = Console.ReadLine();
-            eDoorsAmount DoorsNumber;
-            if (!Enum.TryParse(doors, out DoorsNumber))
+            if (!Enum.TryParse(doors, out eDoorsAmount DoorsNumber))
             {
-                //add exception
+                throw new FormatException("Invalid doors amount.");
             }
             i_Car.DoorsAmount = DoorsNumber;
 
@@ -214,10 +256,9 @@ namespace Ex03.ConsoleUI
 
             Console.WriteLine("Do you have dangerous cargo?: ");
             string dangerousCargo = Console.ReadLine();
-
             if (!bool.TryParse(dangerousCargo, out bool containsDangerousCargo))
             {
-                //add exception
+                throw new FormatException("Invalid input, cannot tell if it has a dangerous cargo.");
             }
             i_truck.DangeresCargo = containsDangerousCargo;
 
@@ -225,7 +266,11 @@ namespace Ex03.ConsoleUI
             string cargoVolume = Console.ReadLine();
             if (!float.TryParse(cargoVolume, out float cargoVolumeAmount))
             {
-                //add exception
+                throw new FormatException("Invalid cargo volume.");
+            }
+            if(cargoVolumeAmount < 0)
+            {
+                throw new ValueRangeException(float.MaxValue, 0, "Cargo volume cannot be a negetive number.");
             }
             i_truck.CargoVolume = cargoVolumeAmount;
 
@@ -239,7 +284,7 @@ namespace Ex03.ConsoleUI
 
             if (!float.TryParse(detailFromUser, out float numberOfDetailFromUser))
             {
-                //add exception - did not succeeded parse
+                throw new FormatException("Input is not in a valid float format.");
             }
 
             return numberOfDetailFromUser;
@@ -288,9 +333,9 @@ namespace Ex03.ConsoleUI
                     GarageVehicle newVehicle = new GarageVehicle(vehicle, ownerName, ownerPhone);
                     m_GarageManager.InsertVehicleToGarage(newVehicle);
                 }
-                catch (Exception ex)
-                {                           //exception
-                    Console.WriteLine($"Error loading line: {vehicleDetails}\n{ex.Message}");
+                catch (Exception exception)
+                {                           
+                    Console.WriteLine($"Error loading line: {vehicleDetails}\n{exception.Message}");
                 }
             }
 
@@ -313,7 +358,7 @@ namespace Ex03.ConsoleUI
 
                 if (!Enum.TryParse(filterStatusBy, out GarageVehicle.eVehicleStatus vehicleStatus))
                 {
-                    //exception
+                    throw new FormatException($"Vehicle status '{filterStatusBy}' is invalid.");
                 }
 
                 listOfLicenseNumbers = m_GarageManager.GetLicenseNumbersFromGarage(vehicleStatus);
@@ -324,7 +369,7 @@ namespace Ex03.ConsoleUI
             }
             else
             {
-                //exception
+                throw new FormatException("Invalid input.");
             }
 
         } 
@@ -345,7 +390,7 @@ namespace Ex03.ConsoleUI
             Console.WriteLine("What the new status? (InProgress, Fixed, Payed)");
             string newStatus = Console.ReadLine();
             if(!Enum.TryParse(newStatus, out GarageVehicle.eVehicleStatus vehicleStatus)){
-              //exception - not good status
+                throw new FormatException($"Vehicle status '{newStatus}' is invalid.");
             }
             m_GarageManager.changeStatusOfAnExistingVehicleInTheGarage(vehicleLicenseNumber, vehicleStatus);
 
@@ -357,8 +402,11 @@ namespace Ex03.ConsoleUI
 
             Console.WriteLine("What is the license number?");
             string vehicleLicenseNumber = Console.ReadLine();
+            if (!m_GarageManager.isVehicleInTheGarage(vehicleLicenseNumber))
+            {
+                throw new VehicleInTheGarageException(vehicleLicenseNumber, false, $"Vehicle {vehicleLicenseNumber} doesn't exists in the garage.");
+            }
             m_GarageManager.inflateTiresAirPressureToMax(vehicleLicenseNumber);
-            //think about exception if license does not exist
         }
 
         private void fillFuelVehicle()
@@ -369,14 +417,10 @@ namespace Ex03.ConsoleUI
             string fuelType = Console.ReadLine();
             if (!Enum.TryParse(fuelType, out eFuelType vehicleFuelType))
             {
-                //exception - not good status
+                throw new FormatException($"Vehicle fuel type '{fuelType}' is invalid.");
             }
             Console.WriteLine("What is the amount you want to fill?");
-            string amountToFill = Console.ReadLine();
-            if (!float.TryParse(amountToFill, out float amountToFillFuelCar))
-            {
-                //add exception - did not succeeded parse
-            }
+            float amountToFillFuelCar = getDetailAndTryFloatParse();
             m_GarageManager.fillFuelBasedVehicle(vehicleLicenseNumber, vehicleFuelType, amountToFillFuelCar);
 
         }
@@ -386,26 +430,56 @@ namespace Ex03.ConsoleUI
         {
             Console.WriteLine("What is the license number?");
             string vehicleLicenseNumber = Console.ReadLine();
-            Console.WriteLine("What is the amount of minutes you want to fill?");
-            string amountToFill = Console.ReadLine();
-            if (!float.TryParse(amountToFill, out float amountToFillElectricCar))
+            if (!m_GarageManager.isVehicleInTheGarage(vehicleLicenseNumber))
             {
-                //add exception - did not succeeded parse
+                throw new VehicleInTheGarageException(vehicleLicenseNumber, false, $"Vehicle {vehicleLicenseNumber} doesn't exists in the garage.");
             }
+
+            Console.WriteLine("What is the amount of minutes you want to fill?");
+            
+            float amountToFillElectricCar = getDetailAndTryFloatParse();
             m_GarageManager.chargeElectricCar(vehicleLicenseNumber, amountToFillElectricCar);
-
-
         }
 
         private void getDetailesOfVehicle()
         {
             Console.WriteLine("What is the license number?");
             string vehicleLicenseNumber = Console.ReadLine();
+            if (!m_GarageManager.isVehicleInTheGarage(vehicleLicenseNumber))
+            {
+                throw new VehicleInTheGarageException(vehicleLicenseNumber, false, $"Vehicle {vehicleLicenseNumber} doesn't exists in the garage.");
+            }
+
             string vehicleData = m_GarageManager.GetVehicleData(vehicleLicenseNumber);
             Console.WriteLine("=== Vehicle Information ===");
             Console.WriteLine(vehicleData);
 
         }
+
+        private void checkPhoneNumberIsValid(string i_PhoneNumber)
+        {
+            if (i_PhoneNumber.Length != 11)
+            {
+                throw new FormatException("Phone number must be exactly 11 characters long in the format XXX-XXXXXXX.");
+            }
+
+            // Check that the 4th character is a hyphen
+            if (i_PhoneNumber[3] != '-')
+            {
+                throw new FormatException("Phone number must contain a hyphen after the first 3 digits.");
+            }
+
+            // Check that the first 3 characters and the last 7 characters are all digits
+            string prefix = i_PhoneNumber.Substring(0, 3);
+            string numberPart = i_PhoneNumber.Substring(4);
+
+            if (!prefix.All(char.IsDigit) || !numberPart.All(char.IsDigit))
+            {
+                throw new FormatException("Phone number must contain only digits and one hyphen (e.g., 050-6564480).");
+            }
+
+        }
+
     }
 }
 
