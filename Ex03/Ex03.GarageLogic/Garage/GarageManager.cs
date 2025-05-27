@@ -15,12 +15,10 @@ namespace Ex03.GarageLogic
             m_Vehicles = new Dictionary<string,GarageVehicle>();//create dictionary
         }
 
-        public void isVehicleInTheGarage(string i_LicenseNumber)
+        public bool isVehicleInTheGarage(string i_LicenseNumber)
         {
-            if (m_Vehicles.ContainsKey(i_LicenseNumber))//if is in the garage
-            {
-                //throw new VehicleAlreadyExistsException(i_Vehicle.LicenseNumber);
-            }
+            return m_Vehicles.ContainsKey(i_LicenseNumber);//if is in the garage
+            
         }
 
         public void InsertVehicleToGarage(GarageVehicle i_vehicle)

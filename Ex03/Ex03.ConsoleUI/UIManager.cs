@@ -41,8 +41,16 @@ namespace Ex03.ConsoleUI
                         loadVehiclesFromFile();
                         break;
                     case "2":
-                        GarageVehicle newVehicle = AddVehicleToGarage();
-                        m_GarageManager.InsertVehicleToGarage(newVehicle);
+                        try
+                        {
+                            GarageVehicle newVehicle = AddVehicleToGarage();
+                            m_GarageManager.InsertVehicleToGarage(newVehicle);
+                        }
+                        catch (VehicleAlreadyExistsException vehicleExistsException)
+                        {
+                            Console.WriteLine(vehicleExistsException.Message); //show message to the user
+                            m_GarageManager.changeStatusOfAnExistingVehicleInTheGarage(vehicleExistsException.LicenseID, GarageVehicle.eVehicleStatus.InProgress);//change status to InProgress
+                        }
                         break;
                     case "3":
                         presentLicenseNumbersOfVehiclesInTheGarage();
@@ -77,10 +85,11 @@ namespace Ex03.ConsoleUI
             Console.Write("Enter license number: ");
             string licenseNumber = Console.ReadLine();
 
-            m_GarageManager.isVehicleInTheGarage(licenseNumber);
-            //will throw an excemption or will continue to add the vehicle
-            //if it already exists we need to make it in progress
-
+            if (m_GarageManager.isVehicleInTheGarage(licenseNumber))
+            {
+                throw new VehicleAlreadyExistsException(licenseNumber);
+            }
+            
             Console.WriteLine("What type of vehicle would you like to insert the garage?");
             string vehicleType = Console.ReadLine();
             //add exception
@@ -90,7 +99,10 @@ namespace Ex03.ConsoleUI
 
             //creating the car here 
             Vehicle vehicle = VehicleCreator.CreateVehicle(vehicleType, licenseNumber, modelName);
-            //check if null -> exception
+            if(vehicle == null)      //type not good
+            {
+                
+            }
 
             setWheelsFromUser(vehicle);
 
