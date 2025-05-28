@@ -16,13 +16,13 @@ using static Ex03.GarageLogic.Motorcycle;
 
 namespace Ex03.ConsoleUI
 {
-    public class UIManager
+    public class UIController
     {
         private GarageManager m_GarageManager;
         private VehicleUI m_VehicleUI;
         private GarageActions m_Actions;
         
-        public UIManager(GarageManager garageManager, VehicleUI vehicleUI, GarageActions actions)
+        public UIController(GarageManager garageManager, VehicleUI vehicleUI, GarageActions actions)
         {
             m_GarageManager = garageManager;
             m_VehicleUI = vehicleUI;
@@ -83,17 +83,6 @@ namespace Ex03.ConsoleUI
                                 m_GarageManager.changeStatusOfAnExistingVehicleInTheGarage(vehicleInTheGarageException.LicenseID, GarageVehicle.eVehicleStatus.InProgress);//change status to InProgress
                             }
                         }
-                        /*catch (ArgumentException argumentException)
-                        {
-                            Console.WriteLine(argumentException.Message); //show message to the user
-                            Console.WriteLine();
-                        }
-                        catch (FormatException formatException)
-                        {
-                            Console.WriteLine(formatException.Message); //show message to the user
-                            Console.WriteLine();
-
-                        }*/
                         catch (Exception exception)
                         {
                             Console.WriteLine(exception.Message); //show message to the user
@@ -128,23 +117,6 @@ namespace Ex03.ConsoleUI
                         {
                             m_Actions.inflateWheels();
                         }
-                       /* catch (VehicleInTheGarageException vehicleInTheGarageException)
-                        {
-                            Console.WriteLine(vehicleInTheGarageException.Message); //show message to the user
-                            Console.WriteLine();
-
-                        }
-                        catch (ArgumentException argumentException)
-                        {
-                            Console.WriteLine(argumentException.Message); //show message to the user
-                            Console.WriteLine();
-                        }
-                        catch (FormatException formatException)
-                        {
-                            Console.WriteLine(formatException.Message); //show message to the user
-                            Console.WriteLine();
-
-                        }*/
                         catch (Exception exception)
                         {
                             Console.WriteLine(exception.Message); //show message to the user
@@ -156,23 +128,6 @@ namespace Ex03.ConsoleUI
                         {
                             m_Actions.fillFuelVehicle();
                         }
-                        /*catch (VehicleInTheGarageException vehicleInTheGarageException)
-                        {
-                            Console.WriteLine(vehicleInTheGarageException.Message); //show message to the user
-                            Console.WriteLine();
-
-                        }
-                        catch (ArgumentException argumentException)
-                        {
-                            Console.WriteLine(argumentException.Message); //show message to the user
-                            Console.WriteLine();
-                        }
-                        catch (FormatException formatException)
-                        {
-                            Console.WriteLine(formatException.Message); //show message to the user
-                            Console.WriteLine();
-
-                        }*/
                         catch (Exception exception)
                         {
                             Console.WriteLine(exception.Message); //show message to the user
@@ -184,23 +139,6 @@ namespace Ex03.ConsoleUI
                         {
                             m_Actions.chargeElectricVehicle();
                         }
-                        /*catch (VehicleInTheGarageException vehicleInTheGarageException)
-                        {
-                            Console.WriteLine(vehicleInTheGarageException.Message); //show message to the user
-                            Console.WriteLine();
-
-                        }
-                        catch (ArgumentException argumentException)
-                        {
-                            Console.WriteLine(argumentException.Message); //show message to the user
-                            Console.WriteLine();
-                        }
-                        catch (FormatException formatException)
-                        {
-                            Console.WriteLine(formatException.Message); //show message to the user
-                            Console.WriteLine();
-
-                        }*/
                         catch (Exception exception)
                         {
                             Console.WriteLine(exception.Message); //show message to the user
@@ -212,23 +150,6 @@ namespace Ex03.ConsoleUI
                         {
                             m_Actions.getDetailesOfVehicle();
                         }
-                       /* catch (VehicleInTheGarageException vehicleInTheGarageException)
-                        {
-                            Console.WriteLine(vehicleInTheGarageException.Message); //show message to the user
-                            Console.WriteLine();
-
-                        }
-                        catch (ArgumentException argumentException)
-                        {
-                            Console.WriteLine(argumentException.Message); //show message to the user
-                            Console.WriteLine();
-                        }
-                        catch (FormatException formatException)
-                        {
-                            Console.WriteLine(formatException.Message); //show message to the user
-                            Console.WriteLine();
-
-                        }*/
                         catch (Exception exception)
                         {
                             Console.WriteLine(exception.Message); //show message to the user
